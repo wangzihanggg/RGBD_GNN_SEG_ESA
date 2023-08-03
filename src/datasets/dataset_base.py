@@ -8,7 +8,10 @@ import pickle
 import abc
 
 import numpy as np
+import cv2
 from torch.utils.data import Dataset
+from SLIC import getSuperpixelImage
+from SegmentMap import getHierarchy
 
 
 class DatasetBase(abc.ABC, Dataset):
@@ -33,9 +36,19 @@ class DatasetBase(abc.ABC, Dataset):
         pass
 
     def __getitem__(self, idx):
-        sample = {'image': self.load_image(idx),
-                  'depth': self.load_depth(idx),
-                  'label': self.load_label(idx)}
+
+        image = self.load_image(idx)
+        depth = self.load_depth(idx)
+        label = self.load_label(idx)
+
+        segmented_map = getSuperpixelImage(image)
+        S_list, A_list = getHierarchy(segmented_map)
+
+        sample = {'image': image,
+                  'depth': depth,
+                  'label': label,
+                  'S_list': S_list,
+                  'A_list': A_list}
 
         if self.split != 'train':
             # needed to compute mIoU on original image size

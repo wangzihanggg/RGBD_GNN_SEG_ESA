@@ -37,7 +37,7 @@ class ArgumentParserRGBDSegmentation(argparse.ArgumentParser):
                                'model on scenenet.')
 
         # input dimensions
-        self.add_argument('--batch_size', type=int, default=8,
+        self.add_argument('--batch_size', type=int, default=1,
                           help='batch size for training')
         self.add_argument('--batch_size_valid', type=int, default=None,
                           help='batch size for validation. Can be typically '
