@@ -9,6 +9,7 @@ import abc
 
 import numpy as np
 import cv2
+import torch
 from torch.utils.data import Dataset
 from SLIC import getSuperpixelImage
 from SegmentMap import getHierarchy
@@ -40,6 +41,8 @@ class DatasetBase(abc.ABC, Dataset):
         image = self.load_image(idx)
         depth = self.load_depth(idx)
         label = self.load_label(idx)
+
+        Unet_Depth = 4
 
         segmented_map = getSuperpixelImage(image)
         S_list, A_list = getHierarchy(segmented_map)

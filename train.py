@@ -31,6 +31,8 @@ from src.utils import print_log
 from src.logger import CSVLogger
 from src.confusion_matrix import ConfusionMatrixTensorflow
 
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 
 def parse_args():
     parser = ArgumentParserRGBDSegmentation(
@@ -280,6 +282,13 @@ def train_one_epoch(model, train_loader, device, optimizer, loss_function_train,
         if modality in ['rgbd', 'rgb']:
             image = sample['image'].to(device)
             batch_size = image.data.shape[0]
+            S_list = sample['S_list']
+            A_list = sample['A_list']
+            S_list_gpu=[]
+            A_list_gpu=[]
+            for i in range(len(S_list)):
+                S_list_gpu.append(torch.from_numpy(np.array( S_list[i],dtype=np.float32 )).to(device))
+                A_list_gpu.append(torch.from_numpy(np.array( A_list[i],dtype=np.float32 )).to(device))
         if modality in ['rgbd', 'depth']:
             depth = sample['depth'].to(device)
             batch_size = depth.data.shape[0]
